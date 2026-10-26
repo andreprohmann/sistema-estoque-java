@@ -48,4 +48,5 @@ O sistema já começa com 4 produtos cadastrados. As mensagens que começam com 
 
 ## Autores
 
-- Nome do aluno - RGM
+- Andre Luis Prohmann - RGM 37919628
+- João Victor Boeng   - RGM 38526905
