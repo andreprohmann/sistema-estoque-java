@@ -19,6 +19,7 @@ public class RegistrarEntradaCommand implements Command {
         return "Registrar entrada";
     }
 
+    // entrada = chegada de mercadoria (compra, reposição)
     @Override
     public void executar() {
         String codigo = Teclado.lerTexto("Código do produto: ");

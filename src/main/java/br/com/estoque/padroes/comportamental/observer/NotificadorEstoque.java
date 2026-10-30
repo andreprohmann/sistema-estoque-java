@@ -1,6 +1,6 @@
 package br.com.estoque.padroes.comportamental.observer;
 
-import br.com.estoque.dominio.Produto;
+import br.com.estoque.dominio.Movimentacao;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +12,7 @@ import java.util.List;
  */
 public class NotificadorEstoque {
 
+    // lista dos observers que estão ligados no momento
     private List<EstoqueObserver> observadores = new ArrayList<>();
 
     public void adicionar(EstoqueObserver observador) {
@@ -28,13 +29,14 @@ public class NotificadorEstoque {
         return observadores.contains(observador);
     }
 
-    public void notificar(Produto produto, String mensagem) {
+    // percorre a lista e chama o atualizar de cada observer
+    public void notificar(Movimentacao movimentacao) {
         if (observadores.isEmpty()) {
-            return;
+            return; // ninguém para avisar
         }
-        System.out.println("[Observer] Avisando " + observadores.size() + " observer(s): " + mensagem);
+        System.out.println("[Observer] Avisando " + observadores.size() + " observer(s): " + movimentacao.getDescricao());
         for (EstoqueObserver o : observadores) {
-            o.atualizar(produto, mensagem);
+            o.atualizar(movimentacao);
         }
     }
 }

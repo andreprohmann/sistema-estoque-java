@@ -19,6 +19,7 @@ public class RegistrarSaidaCommand implements Command {
         return "Registrar saída";
     }
 
+    // saída = venda ou consumo do produto
     @Override
     public void executar() {
         String codigo = Teclado.lerTexto("Código do produto: ");

@@ -1,21 +1,23 @@
 package br.com.estoque.dominio;
 
 /**
+ * Produto guardado no estoque. É criado pelo ProdutoBuilder.
+ *
  * @note Papel no Padrão: Product (Builder)
  */
 public class Produto {
 
     private String codigo;
     private String nome;
-    private String categoria;
+    private Categoria categoria;
     private double preco;
-    private int quantidade;
-    private int estoqueMinimo;
+    private int quantidade;      // quantidade atual em estoque
+    private int estoqueMinimo;   // abaixo ou igual a isso o estoque é considerado baixo
     private String fornecedor;
 
-    public Produto(String codigo, String nome, String categoria, double preco,
+    // o código não vem no construtor: ele é gerado pelo serviço na hora do cadastro
+    public Produto(String nome, Categoria categoria, double preco,
                    int quantidade, int estoqueMinimo, String fornecedor) {
-        this.codigo = codigo;
         this.nome = nome;
         this.categoria = categoria;
         this.preco = preco;
@@ -24,6 +26,7 @@ public class Produto {
         this.fornecedor = fornecedor;
     }
 
+    // usado pelos observers para saber se precisam dar alerta
     public boolean isEstoqueBaixo() {
         return quantidade <= estoqueMinimo;
     }
@@ -32,11 +35,15 @@ public class Produto {
         return codigo;
     }
 
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+
     public String getNome() {
         return nome;
     }
 
-    public String getCategoria() {
+    public Categoria getCategoria() {
         return categoria;
     }
 
@@ -64,6 +71,7 @@ public class Produto {
         return fornecedor;
     }
 
+    // linha usada na listagem de produtos
     @Override
     public String toString() {
         String situacao = quantidade == 0 ? "ESGOTADO" : (isEstoqueBaixo() ? "BAIXO" : "OK");

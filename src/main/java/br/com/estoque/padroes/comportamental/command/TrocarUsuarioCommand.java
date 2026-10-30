@@ -28,6 +28,7 @@ public class TrocarUsuarioCommand implements Command {
         System.out.println("3 - Visitante");
         int opcao = Teclado.lerInt("Perfil: ");
 
+        // qualquer número diferente de 1 e 2 vira visitante, que é o perfil mais restrito
         Perfil perfil;
         if (opcao == 1) {
             perfil = Perfil.ADMINISTRADOR;
@@ -36,6 +37,7 @@ public class TrocarUsuarioCommand implements Command {
         } else {
             perfil = Perfil.VISITANTE;
         }
+        // a facade repassa o perfil para o proxy
         facade.entrar(nome, perfil);
     }
 }

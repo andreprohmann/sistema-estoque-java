@@ -7,7 +7,9 @@ package br.com.estoque.padroes.comportamental.command;
  */
 public interface Command {
 
+    // texto que aparece no menu
     String getNome();
 
+    // o que a opção faz quando é escolhida
     void executar();
 }

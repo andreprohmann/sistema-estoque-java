@@ -28,6 +28,7 @@ public class BuscarProdutoCommand implements Command {
             System.out.println("Produto não encontrado.");
             return;
         }
+        // mostra todos os dados do produto encontrado
         System.out.println("Código: " + p.getCodigo());
         System.out.println("Nome: " + p.getNome());
         System.out.println("Categoria: " + p.getCategoria());

@@ -1,43 +1,39 @@
 package br.com.estoque.padroes.estrutural;
 
+import br.com.estoque.dominio.Categoria;
 import br.com.estoque.dominio.Perfil;
 import br.com.estoque.dominio.Produto;
 import br.com.estoque.servicos.EstoqueService;
+import br.com.estoque.servicos.Sessao;
 
 import java.util.List;
 
 /**
- * Verifica o perfil do usuário antes de repassar a chamada ao serviço real.
- * Visitante só consulta, operador também movimenta o estoque e o
- * administrador pode tudo.
+ * Verifica o perfil do usuário logado antes de repassar a chamada ao serviço
+ * real. O que cada perfil pode fazer está definido no enum Perfil.
  *
  * @note Papel no Padrão: Proxy
  */
 public class EstoqueServiceProxy implements EstoqueService {
 
-    private EstoqueService servicoReal;
-    private Perfil perfil = Perfil.VISITANTE;
+    private EstoqueService servicoReal; // objeto que faz o trabalho de verdade
+    private Sessao sessao;              // de onde o proxy descobre quem está logado
 
-    public EstoqueServiceProxy(EstoqueService servicoReal) {
+    public EstoqueServiceProxy(EstoqueService servicoReal, Sessao sessao) {
         this.servicoReal = servicoReal;
+        this.sessao = sessao;
     }
 
-    public void setPerfil(Perfil perfil) {
-        this.perfil = perfil;
-    }
-
-    @Override
-    public String gerarCodigo() {
-        somenteAdministrador("cadastrar produto");
-        return servicoReal.gerarCodigo();
-    }
+    // todos os métodos seguem a mesma ideia: primeiro verifica a permissão,
+    // se estiver tudo certo repassa para o serviço real
 
     @Override
     public void cadastrar(Produto produto) {
-        somenteAdministrador("cadastrar produto");
+        verificar(perfil().podeGerenciarProdutos(), "cadastrar produto");
         servicoReal.cadastrar(produto);
     }
 
+    // consultar é liberado para todos, então só repassa
     @Override
     public List<Produto> listar() {
         return servicoReal.listar();
@@ -50,41 +46,50 @@ public class EstoqueServiceProxy implements EstoqueService {
 
     @Override
     public void entrada(String codigo, int quantidade) {
-        naoPodeSerVisitante("registrar entrada");
+        verificar(perfil().podeMovimentar(), "registrar entrada");
         servicoReal.entrada(codigo, quantidade);
     }
 
     @Override
     public void saida(String codigo, int quantidade) {
-        naoPodeSerVisitante("registrar saída");
+        verificar(perfil().podeMovimentar(), "registrar saída");
         servicoReal.saida(codigo, quantidade);
     }
 
     @Override
     public void alterarPreco(String codigo, double preco) {
-        somenteAdministrador("alterar preço");
+        verificar(perfil().podeGerenciarProdutos(), "alterar preço");
         servicoReal.alterarPreco(codigo, preco);
     }
 
     @Override
     public void remover(String codigo) {
-        somenteAdministrador("remover produto");
+        verificar(perfil().podeGerenciarProdutos(), "remover produto");
         servicoReal.remover(codigo);
     }
 
-    private void somenteAdministrador(String operacao) {
-        if (perfil != Perfil.ADMINISTRADOR) {
-            System.out.println("[Proxy] " + perfil + " tentou " + operacao + ": acesso negado.");
-            throw new RuntimeException("Acesso negado: apenas o administrador pode fazer isso.");
-        }
-        System.out.println("[Proxy] " + perfil + " pode " + operacao + ": acesso liberado.");
+    @Override
+    public Categoria cadastrarCategoria(String nome) {
+        verificar(perfil().podeGerenciarProdutos(), "cadastrar categoria");
+        return servicoReal.cadastrarCategoria(nome);
     }
 
-    private void naoPodeSerVisitante(String operacao) {
-        if (perfil == Perfil.VISITANTE) {
-            System.out.println("[Proxy] " + perfil + " tentou " + operacao + ": acesso negado.");
-            throw new RuntimeException("Acesso negado: visitante só pode consultar.");
+    // ver as categorias é liberado para todos
+    @Override
+    public List<Categoria> listarCategorias() {
+        return servicoReal.listarCategorias();
+    }
+
+    private Perfil perfil() {
+        return sessao.getUsuario().getPerfil();
+    }
+
+    // se não tiver permissão lança uma exceção, que é tratada no MenuInvoker
+    private void verificar(boolean permitido, String operacao) {
+        if (!permitido) {
+            System.out.println("[Proxy] " + perfil() + " tentou " + operacao + ": acesso negado.");
+            throw new RuntimeException("Acesso negado: o perfil " + perfil() + " não pode " + operacao + ".");
         }
-        System.out.println("[Proxy] " + perfil + " pode " + operacao + ": acesso liberado.");
+        System.out.println("[Proxy] " + perfil() + " pode " + operacao + ": acesso liberado.");
     }
 }

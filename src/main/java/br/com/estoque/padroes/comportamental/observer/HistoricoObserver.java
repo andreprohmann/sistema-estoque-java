@@ -1,9 +1,7 @@
 package br.com.estoque.padroes.comportamental.observer;
 
-import br.com.estoque.dominio.Produto;
+import br.com.estoque.dominio.Movimentacao;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,21 +12,21 @@ import java.util.List;
  */
 public class HistoricoObserver implements EstoqueObserver {
 
-    private List<String> registros = new ArrayList<>();
-    private DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+    private List<Movimentacao> movimentacoes = new ArrayList<>();
 
     @Override
     public String getNome() {
         return "Histórico";
     }
 
+    // diferente dos outros observers, este guarda todas as movimentações, não só os alertas
     @Override
-    public void atualizar(Produto produto, String mensagem) {
-        registros.add(LocalDateTime.now().format(formato) + " - " + produto.getCodigo() + " "
-                + produto.getNome() + ": " + mensagem);
+    public void atualizar(Movimentacao movimentacao) {
+        movimentacoes.add(movimentacao);
     }
 
-    public List<String> getRegistros() {
-        return registros;
+    // devolve uma cópia para ninguém apagar o histórico por fora
+    public List<Movimentacao> getMovimentacoes() {
+        return List.copyOf(movimentacoes);
     }
 }

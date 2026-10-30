@@ -10,6 +10,7 @@ import java.util.Map;
  */
 public class MenuInvoker {
 
+    // número da opção -> comando. O LinkedHashMap mantém a ordem em que foram adicionados
     private Map<Integer, Command> comandos = new LinkedHashMap<>();
 
     public void adicionar(int opcao, Command comando) {
@@ -30,6 +31,8 @@ public class MenuInvoker {
             return;
         }
         System.out.println("[Command] Executando " + comando.getClass().getSimpleName());
+        // os erros (acesso negado, produto não encontrado etc.) são tratados aqui
+        // num lugar só, assim o programa não fecha e volta para o menu
         try {
             comando.executar();
         } catch (RuntimeException e) {

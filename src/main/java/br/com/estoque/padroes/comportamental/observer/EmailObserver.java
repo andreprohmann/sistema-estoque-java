@@ -1,5 +1,6 @@
 package br.com.estoque.padroes.comportamental.observer;
 
+import br.com.estoque.dominio.Movimentacao;
 import br.com.estoque.dominio.Produto;
 
 /**
@@ -9,7 +10,7 @@ import br.com.estoque.dominio.Produto;
  */
 public class EmailObserver implements EstoqueObserver {
 
-    private String email;
+    private String email; // endereço que "recebe" o e-mail
 
     public EmailObserver(String email) {
         this.email = email;
@@ -21,7 +22,9 @@ public class EmailObserver implements EstoqueObserver {
     }
 
     @Override
-    public void atualizar(Produto produto, String mensagem) {
+    public void atualizar(Movimentacao movimentacao) {
+        Produto produto = movimentacao.getProduto();
+        // não envia e-mail de verdade, só mostra na tela o que seria enviado
         if (produto.isEstoqueBaixo()) {
             System.out.println("[E-mail para " + email + "] Repor o produto " + produto.getCodigo()
                     + " - " + produto.getNome());

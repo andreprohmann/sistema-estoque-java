@@ -24,12 +24,14 @@ public class GerenciarNotificacoesCommand implements Command {
 
     @Override
     public void executar() {
+        // lista os canais mostrando se cada um está ligado ou não
         List<EstoqueObserver> canais = facade.getCanais();
         for (int i = 0; i < canais.size(); i++) {
             String situacao = facade.isCanalAtivo(canais.get(i)) ? "ligado" : "desligado";
             System.out.println((i + 1) + " - " + canais.get(i).getNome() + " (" + situacao + ")");
         }
         int opcao = Teclado.lerInt("Escolha o canal (0 para voltar): ");
+        // opcao - 1 porque a lista começa no índice 0
         if (opcao >= 1 && opcao <= canais.size()) {
             facade.alternarCanal(canais.get(opcao - 1));
         }

@@ -23,7 +23,7 @@ public class AlterarPrecoCommand implements Command {
     public void executar() {
         String codigo = Teclado.lerTexto("Código do produto: ");
         double preco = Teclado.lerDouble("Novo preço: ");
-        facade.alterarPreco(codigo, preco);
+        facade.alterarPreco(codigo, preco); // só o administrador consegue (proxy)
         System.out.println("Preço alterado.");
     }
 }

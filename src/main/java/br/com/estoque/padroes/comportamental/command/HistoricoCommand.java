@@ -1,5 +1,6 @@
 package br.com.estoque.padroes.comportamental.command;
 
+import br.com.estoque.dominio.Movimentacao;
 import br.com.estoque.padroes.estrutural.EstoqueFacade;
 
 /**
@@ -18,14 +19,15 @@ public class HistoricoCommand implements Command {
         return "Ver histórico";
     }
 
+    // mostra o que o HistoricoObserver foi guardando
     @Override
     public void executar() {
         if (facade.getHistorico().isEmpty()) {
             System.out.println("Nenhuma movimentação registrada.");
             return;
         }
-        for (String registro : facade.getHistorico()) {
-            System.out.println(registro);
+        for (Movimentacao m : facade.getHistorico()) {
+            System.out.println(m);
         }
     }
 }

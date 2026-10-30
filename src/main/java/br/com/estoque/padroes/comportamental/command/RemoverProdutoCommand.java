@@ -22,6 +22,7 @@ public class RemoverProdutoCommand implements Command {
     @Override
     public void executar() {
         String codigo = Teclado.lerTexto("Código do produto: ");
+        // pede confirmação para não apagar por engano
         String confirma = Teclado.lerTexto("Tem certeza? (S/N): ");
         if (!confirma.equalsIgnoreCase("S")) {
             System.out.println("Cancelado.");
