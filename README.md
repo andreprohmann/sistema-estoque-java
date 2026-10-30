@@ -49,4 +49,5 @@ O sistema já começa com 4 categorias e 4 produtos cadastrados. O administrador
 
 ## Autores
 
-- Nome do aluno - RGM
+- Andre Luis Prohmann - RGM 37919628
+- Joao Victor Boeng - RGM 38526905
